@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta http-equiv="Cache-control" content="public">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Be silly rawr :3">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=(), fullscreen=(self)">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>uwu</title>
+    <style>
+        /* General Body and Header Styles */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #0e0e0e;
+            color: #e0e0e0;
+            overflow: hidden;
+        }
+
+        header {
+            display: flex;
+            justify-content: flex-start; /* Align items to the left */
+            align-items: center;
+            padding: 15px 20px; /* Reduced padding for better left alignment */
+            background-color: #222;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #76e0c1;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            margin-right: 30px; /* Adjust space between logo and navigation */
+        }
+
+        .logo:hover {
+            transform: scale(1.1);
+        }
+
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            gap: 20px; /* Reduced gap to tighten spacing */
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #ffffff;
+            font-size: 16px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: background-color 0.3s, transform 0.3s;
+            position: relative;
+        }
+
+        .nav-menu a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: #76e0c1;
+            transition: width 0.3s ease, left 0.3s ease;
+        }
+
+        .nav-menu a:hover::before {
+            width: 100%;
+            left: 0;
+        }
+
+        .nav-menu a:hover {
+            background-color: #333;
+            transform: translateY(-3px);
+        }
+
+        /* Section Styles */
+        .section {
+            display: none;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            height: calc(100% - 60px);
+            padding: 40px;
+            background: linear-gradient(145deg, #1f1f1f, #2a2a2a);
+            color: #f5f5f5;
+            overflow-y: auto;
+            opacity: 0;
+            transform: translateY(50px) scale(0.95);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            z-index: 10;
+            border-radius: 10px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        h1 {
+            color: #76e0c1;
+            font-size: 2.5em;
+            margin-top: 0;
+        }
+
+        /* Media Upload Section Styles */
+        .upload-container {
+            margin-top: 20px;
+            padding: 20px;
+            border: 2px dashed #76e0c1;
+            border-radius: 10px;
+            background-color: #2b2b2b;
+            text-align: center;
+        }
+
+        .upload-form {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap; /* Allow wrapping to prevent cutoff */
+            width: 100%;
+            max-width: 600px; /* Added to constrain maximum size */
+            margin: 0 auto; /* Center the form */
+        }
+
+        .upload-form * {
+            box-sizing: border-box; /* Ensures padding and borders are included in the element's total size */
+        }
+
+        .upload-form input[type="file"] {
+            font-size: 16px;
+            color: #e0e0e0;
+            background-color: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 5px;
+            padding: 8px;
+            flex: 1 1 auto; /* Allow input to take available space */
+            min-width: 120px; /* Ensure a minimum size */
+        }
+
+        .upload-form button {
+            font-size: 16px;
+            padding: 10px 20px;
+            background-color: #76e0c1;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: #0e0e0e;
+            transition: background-color 0.3s;
+            flex-shrink: 0; /* Prevent shrinking */
+            min-width: 80px; /* Ensure button maintains a usable size */
+        }
+
+        .upload-form button:hover {
+            background-color: #5ab09e;
+        }
+
+        /* Gallery and Report Button Styles */
+        .gallery {
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            padding: 10px;
+            max-height: 90vh;
+            box-sizing: border-box;
+            width: 90%;
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .gallery-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #2a2a2a;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .gallery img, .gallery video {
+            max-width: 100%;
+            height: auto;
+            max-height: 80vh;
+            border-radius: 5px;
+            border: 1px solid #444;
+        }
+
+        .report-button {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: #ff4b4b;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: background-color 0.3s;
+        }
+
+        .report-button:hover {
+            background-color: #e63939;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">Hewwo</div>
+        <nav>
+            <ul class="nav-menu">
+                <li><a href="#" data-section="home">Home</a></li>
+                <li><a href="#" data-section="projects">Projects</a></li>
+                <li><a href="#" data-section="about">About Me</a></li>
+                <li><a href="#" data-section="community">Community</a></li>
+                <li><a href="#" data-section="contact">Contact</a></li>
+                <li><a href="#" data-section="media">Media</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Background Overlay -->
+    <div class="background-overlay"></div>
+
+    <main>
+        <section id="home" class="section active">
+            <h1>Welcome to My Portfolio</h1>
+            <p>I exist.</p>
+                <p>This website is under construction, Media is the only completed one so far.</p>
+        </section>
+
+        <section id="projects" class="section">
+            <h1>Projects</h1>
+            <p>Here are some of the amazing things I've worked on recently.</p>
+        </section>
+
+        <section id="about" class="section">
+            <h1>About Me</h1>
+            <p>Discover more about my journey, skills, and passions.</p>
+        </section>
+
+        <section id="community" class="section">
+            <h1>Community</h1>
+            <p>Join the conversation and connect with a great community.</p>
+        </section>
+
+        <section id="contact" class="section">
+            <h1>Contact</h1>
+            <p>Let's collaborate! Reach out through my social media or email.</p>
+        </section>
+
+        <!-- Media Upload Section -->
+        <section id="media" class="section">
+            <h1>Upload an Image or Video</h1>
+            <h3>Please report any images to UwURawrXD@mail2tor.com</h3>
+            <form class="upload-form" id="uploadForm" enctype="multipart/form-data">
+                <input type="file" name="image" required>
+                <button type="submit">Upload</button>
+            </form>
+            <a href="/Legal/TOS.txt">Terms of Service</a> |
+            <a href="/Legal/AUP.txt">Acceptable Use Policy</a> |
+            <a href="/Legal/DRP.txt">Data Retention Policy</a>
+
+            <div class="gallery" id="gallery">
+                <!-- Media will be dynamically loaded here -->
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // JavaScript for smooth navigation and unique section transitions
+        document.addEventListener('DOMContentLoaded', function () {
+            const links = document.querySelectorAll('.nav-menu a');
+            const sections = document.querySelectorAll('.section');
+
+            // Activate home section by default
+            document.getElementById('home').classList.add('active');
+
+            links.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('data-section');
+                    const targetSection = document.getElementById(targetId);
+
+                    // Hide all sections
+                    sections.forEach(section => section.classList.remove('active'));
+
+                    // Show the selected section
+                    targetSection.classList.add('active');
+                });
+            });
+
+            // File upload and gallery display functionality
+            const gallery = document.getElementById('gallery');
+            const uploadForm = document.getElementById('uploadForm');
+
+            // WebSocket setup for auto-refresh with secure WebSocket protocol
+            const socket = new WebSocket('wss://' + window.location.host);
+            socket.onmessage = function(event) {
+                if (event.data === 'refresh') {
+                    location.reload();
+                }
+            };
+
+            // Load gallery
+            function loadGallery() {
+                fetch('/api/media')
+                    .then(response => response.json())
+                    .then(media => {
+                        gallery.innerHTML = ''; // Clear existing gallery
+                        media.forEach(file => {
+                            const item = document.createElement('div');
+                            item.className = 'gallery-item';
+
+                            let element;
+                            if (/\.(mp4|webm|mkv)$/i.test(file)) {
+                                element = document.createElement('video');
+                                element.src = `/Gallery/${file}`;
+                                element.controls = true;
+                            } else if (/\.(jpe?g|png|gif)$/i.test(file)) {
+                                element = document.createElement('img');
+                                element.src = `/Gallery/${file}`;
+                            }
+
+                            // Create the report button
+                            const reportButton = document.createElement('button');
+                            reportButton.textContent = 'Report';
+                            reportButton.className = 'report-button';
+                            reportButton.onclick = () => reportMedia(file);
+
+                            item.appendChild(element);
+                            item.appendChild(reportButton);
+                            gallery.appendChild(item);
+                        });
+                    })
+                    .catch(error => console.error('Error loading gallery:', error));
+            }
+
+            function reportMedia(filename) {
+                $.ajax({
+                    url: '/report',
+                    type: 'POST',
+                    data: { filename: filename },
+                    success: function(response) {
+                        alert('The file has been reported.');
+                        loadGallery(); // Optionally reload the gallery after reporting
+                    },
+                    error: function() {
+                        alert('There was an error reporting the file.');
+                    }
+                });
+            }
+
+            // Load gallery initially
+            loadGallery();
+
+            // Handle file upload
+            $('#uploadForm').on('submit', function(e) {
+                e.preventDefault();
+
+                let formData = new FormData();
+                formData.append('image', $('input[type=file]')[0].files[0]);
+
+                $.ajax({
+                    url: '/upload',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        alert('Upload successful! Conversion will happen in the background.');
+                        loadGallery(); // Optionally reload the gallery after upload
+                    },
+                    error: function() {
+                        alert('There was an error uploading the file.');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
